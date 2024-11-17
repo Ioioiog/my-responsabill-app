@@ -1,0 +1,17 @@
+{
+  "name": "responsabill",
+  "version": "1.0.0",
+  "description": "AI-Powered Recovery Assistant",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "cors": "^2.8.5",
+    "axios": "^0.21.1"
+  },
+  "author": "Your Name",
+  "license": "ISC"
+}
