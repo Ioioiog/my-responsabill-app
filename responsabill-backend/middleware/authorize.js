@@ -1,7 +1,10 @@
-module.exports = function(roles) {
-    return function(req, res, next) {
-        if (!req.user || !roles.includes(req.user.role)) {
-            return res.status(403).json({ msg: 'Access denied' });
+// middleware/authorize.js
+module.exports = (roles = []) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({ 
+                message: 'Access forbidden' 
+            });
         }
         next();
     };

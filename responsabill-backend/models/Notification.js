@@ -1,3 +1,4 @@
+// models/Notification.js
 const mongoose = require('mongoose');
 
 const NotificationSchema = new mongoose.Schema({
@@ -10,6 +11,11 @@ const NotificationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        enum: ['alert', 'reminder', 'update'],
+        default: 'alert'
+    },
     read: {
         type: Boolean,
         default: false,
@@ -17,7 +23,7 @@ const NotificationSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-    },
+    }
 });
 
 module.exports = mongoose.model('Notification', NotificationSchema);

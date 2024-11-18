@@ -1,29 +1,20 @@
+// config/db.js
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
+dotenv.config();
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('MongoDB connected');
+    } catch (error) {
+        console.error('MongoDB connection error:', error.message);
+        process.exit(1);
     }
-});
+};
 
-// Replace ensureIndex with createIndexes
-userSchema.index({ email: 1 }, { unique: true });
-
-// Check if the model already exists before defining it
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-
-module.exports = User;
+module.exports = connectDB;

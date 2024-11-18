@@ -1,15 +1,46 @@
 // src/api/auth.js
-import axiosInstance from './axios';
+import { API_BASE_URL, handleResponse } from './config';
 
-export const login = async (credentials) => {
-  try {
-    const response = await axiosInstance.post('/api/auth/login', credentials);
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
+export const authAPI = {
+    getToken: () => localStorage.getItem('token'),
+    setToken: (token) => localStorage.setItem('token', token),
+    removeToken: () => localStorage.removeItem('token'),
+
+    register: async (userData) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+            const data = await handleResponse(response);
+            authAPI.setToken(data.token);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    login: async (credentials) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(credentials),
+            });
+            const data = await handleResponse(response);
+            authAPI.setToken(data.token);
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    logout: () => {
+        authAPI.removeToken();
     }
-    return response.data;
-  } catch (error) {
-    console.error('Login error:', error.response?.data || error.message);
-    throw error;
-  }
 };

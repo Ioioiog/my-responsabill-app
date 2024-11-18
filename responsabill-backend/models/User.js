@@ -1,18 +1,16 @@
+// models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: true,
-        unique: true,
-        trim: true,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        trim: true,
     },
     password: {
         type: String,
@@ -23,6 +21,12 @@ const UserSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user',
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    }
 });
 
 UserSchema.pre('save', async function(next) {
@@ -31,5 +35,9 @@ UserSchema.pre('save', async function(next) {
     next();
 });
 
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
+UserSchema.methods.comparePassword = async function(candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
+};
+
+const User = mongoose.model('User', UserSchema);
 module.exports = User;
