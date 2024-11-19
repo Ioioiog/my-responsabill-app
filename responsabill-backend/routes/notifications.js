@@ -1,7 +1,8 @@
-// routes/notifications.js
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const authorize = require('../middleware/authorize');
+const { body, validationResult } = require('express-validator');
 const Notification = require('../models/Notification');
 
 // Get all notifications for authenticated user
@@ -67,7 +68,7 @@ router.delete('/:id', auth, async (req, res) => {
             return res.status(403).json({ message: 'Not authorized' });
         }
 
-        await notification.remove();
+        await notification.deleteOne();
         res.json({ message: 'Notification removed' });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
@@ -76,7 +77,8 @@ router.delete('/:id', auth, async (req, res) => {
 
 // Create notification (admin only)
 router.post('/', 
-    [auth, authorize(['admin'])],
+    auth, 
+    authorize(['admin']), 
     [
         body('userId').isMongoId(),
         body('message').notEmpty().trim(),

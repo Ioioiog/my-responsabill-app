@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
@@ -13,8 +12,17 @@ connectDB();
 
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+    origin: 'http://localhost:3000', // React app's URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -24,13 +32,10 @@ app.use('/api/recovery-logs', require('./routes/recoveryLogs'));
 app.use('/api/community-posts', require('./routes/communityPosts'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/admin', require('./routes/admin'));
-app.use('/api/community-posts', require('./routes/communityPosts'));
-app.use('/api/recovery-logs', require('./routes/recoveryLogs'));
-app.use('/api/notifications', require('./routes/notifications'));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
